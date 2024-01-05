@@ -7,8 +7,8 @@ import torch
 import torch.nn as nn
 
 
-def get_img_shape():
-    return (1, 28, 28)
+def get_img_shape(c=1,h=28,w=28):
+    return (c, h, w)
 
 
 class PositionalEncoding(nn.Module):
@@ -42,12 +42,13 @@ class ResidualBlock(nn.Module):
         self.conv1 = nn.Conv2d(in_c, out_c, 3, 1, 1)
         self.bn1 = nn.BatchNorm2d(out_c)
         self.actvation1 = nn.ReLU()
+        
         self.conv2 = nn.Conv2d(out_c, out_c, 3, 1, 1)
         self.bn2 = nn.BatchNorm2d(out_c)
         self.actvation2 = nn.ReLU()
+        
         if in_c != out_c:
-            self.shortcut = nn.Sequential(nn.Conv2d(in_c, out_c, 1),
-                                          nn.BatchNorm2d(out_c))
+            self.shortcut = nn.Sequential(nn.Conv2d(in_c, out_c, 1), nn.BatchNorm2d(out_c))
         else:
             self.shortcut = nn.Identity()
 
@@ -55,6 +56,7 @@ class ResidualBlock(nn.Module):
         x = self.conv1(x)
         x = self.bn1(x)
         x = self.actvation1(x)
+        
         x = self.conv2(x)
         x = self.bn2(x)
         x += self.shortcut(x)

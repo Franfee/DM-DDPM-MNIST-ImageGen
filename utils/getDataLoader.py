@@ -7,7 +7,7 @@
 import os
 import torchvision
 from torch.utils.data import DataLoader
-from torchvision.transforms import Compose, Lambda, ToTensor
+from torchvision.transforms import Compose, ToTensor, Lambda
 
 BASE_DIR = os.getcwd()
 if "utils" not in BASE_DIR:
@@ -15,14 +15,13 @@ if "utils" not in BASE_DIR:
 
 
 def get_dataloader(batch_size: int, train: bool):
-    transform = Compose([ToTensor(),
-                         Lambda(lambda x: (x - 0.5) * 2)
-                         ])
+    transform = Compose([ToTensor(), Lambda(lambda x: (x - 0.5) * 2)])
 
     dataset = torchvision.datasets.MNIST(root=os.path.join(BASE_DIR, "..", "datasets"),
                                          train=train,
                                          transform=transform,
                                          download=True)
+    
     return DataLoader(dataset, batch_size=batch_size, drop_last=True, shuffle=True)
 
 

@@ -38,7 +38,7 @@ class UnetBlock(nn.Module):
 
 class UNet(nn.Module):
 
-    def __init__(self, n_steps, channels=[10, 20, 40, 80], pe_dim=10, residual=False) -> None:
+    def __init__(self, n_steps, channels=[10, 20, 40, 80], pe_dim=128, residual=True) -> None:
         super().__init__()
         C, H, W = get_img_shape()
         layers = len(channels)

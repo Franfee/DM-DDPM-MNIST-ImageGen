@@ -4,7 +4,7 @@
 # @Software: PyCharm
 # @python  : Python 3.9.12
 import torch
-
+from tqdm.auto import tqdm
 
 class DDPM:
     """
@@ -68,7 +68,7 @@ class DDPM:
         x = torch.randn(img_shape).to(device)
         net = net.to(device)
         # 令t = n_steps - 1 到 0
-        for t in range(self.n_steps - 1, -1, -1):
+        for t in tqdm(range(self.n_steps - 1, -1, -1), desc="ddpm sampling loop time step"):
             x = self.sample_backward_step(x, t, net, simple_var, clip_x0)
         return x
 

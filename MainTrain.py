@@ -4,18 +4,20 @@
 # @Software: PyCharm
 # @python  : Python 3.9.12
 import os
+# 指定显卡可见性
+os.environ['CUDA_VISIBLE_DEVICES'] = '1'
+
 import time
 import torch
 from torch import nn
 
 from utils.getDataLoader import get_dataloader
 
+from net.UNet import UNet
 from net.DDPM import DDPM
-from net.net_build import build_network
-from net.net_config import configs
 
-# 如何在PyTorch中使用自动混合精度？
-# 答案就是autocast + GradScaler
+
+# 在PyTorch中使用自动混合精度: autocast + GradScaler
 from torch.cuda.amp import autocast as autocast
 from torch.cuda.amp import GradScaler
 
@@ -92,15 +94,14 @@ def train(ddpm: DDPM, net, device, ckpt_path):
 if __name__ == '__main__':
     os.makedirs('result', exist_ok=True)
     os.makedirs('result/models', exist_ok=True)
+    os.makedirs('result/images', exist_ok=True)
 
     # -------ddpm---------
     diffusion_steps = 1000
     ddpm_helper = DDPM(DEVICE, diffusion_steps)
 
     # ------build net------
-    config_id = 4
-    config = configs[config_id]
-    scratch_net = build_network(config, diffusion_steps)
+    scratch_net = UNet(n_steps=diffusion_steps, channels=[10, 20, 40, 80], pe_dim=128, residual=True)
 
     # ------train---------
     model_path = 'result/models/model_unet_res.pth'
